@@ -1,0 +1,46 @@
+/* Basic reset for margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  nav {
+    background-color: #333; /* Dark background color */
+    padding: 10px 20px; /* Padding around the navbar */
+  }
+  
+  ul {
+    list-style: none; /* Remove bullet points */
+    display: flex; /* Use flexbox for horizontal layout */
+    justify-content: center; /* Center items horizontally */
+  }
+  
+  li {
+    margin: 0 15px; /* Space out the list items */
+  }
+  
+  a {
+    text-decoration: none; /* Remove underline from links */
+    color: #fff; /* White text color */
+    font-size: 18px; /* Font size */
+    font-weight: bold; /* Bold text */
+    transition: color 0.3s ease; /* Smooth color transition */
+  }
+  
+  a:hover {
+    color: #ff6347; /* Change color on hover */
+  }
+  
+  /* Responsive design for smaller screens */
+  @media (max-width: 768px) {
+    ul {
+      flex-direction: column; /* Stack items vertically on smaller screens */
+      align-items: center; /* Center items */
+    }
+  
+    li {
+      margin: 10px 0; /* Vertical spacing */
+    }
+  }
+  
