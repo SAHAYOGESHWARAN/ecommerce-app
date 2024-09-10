@@ -4,17 +4,17 @@ import axios from 'axios';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState(''); // For displaying messages
+  const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
       localStorage.setItem('token', response.data.token); // Store token in local storage
-      setMessage('Login successful'); // Success message
+      setMessage('Login successful');
       // Redirect or handle login success
     } catch (error) {
-      setMessage('Login failed. Please check your credentials and try again.'); // Error message
+      setMessage('Login failed. Please check your credentials and try again.');
       console.error('Login failed', error);
     }
   };
@@ -41,7 +41,7 @@ const Login = () => {
         </div>
         <button type="submit">Login</button>
       </form>
-      {message && <p>{message}</p>} {/* Display message */}
+      {message && <p>{message}</p>}
     </div>
   );
 };
