@@ -17,7 +17,9 @@ const Home = () => {
       <h1>Products</h1>
       <ul>
         {products.map(product => (
-          <li key={product._id}>{product.name} - ${product.price}</li>
+          <li key={product._id}>
+            {product.name} - ${product.price}
+          </li>
         ))}
       </ul>
     </div>
