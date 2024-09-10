@@ -1,23 +1,23 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
-import Login from './components/Auth/Login';
-import Register from './components/Auth/Register';
-import ProductList from './components/Product/ProductList';
+import Login from './components/Auth/Login'; // Ensure case sensitivity
+import Register from './components/Auth/Register'; // Ensure case sensitivity
+import ProductList from './components/Product/ProductList'; // Ensure case sensitivity
 import ProductDetails from './components/Product/ProductDetails';
 import ProductUpload from './components/Product/ProductUpload';
 
 const App = () => {
   return (
     <Router>
-      <Switch>
-        <Route path="/login" component={Login} />
-        <Route path="/register" component={Register} />
-        <Route path="/products" component={ProductList} exact />
-        <Route path="/products/:id" component={ProductDetails} />
-        <Route path="/upload" component={ProductUpload} />
-        <Route path="/" component={Home} exact />
-      </Switch>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/products" element={<ProductList />} />
+        <Route path="/products/:id" element={<ProductDetails />} />
+        <Route path="/upload" element={<ProductUpload />} />
+        <Route path="/" element={<Home />} />
+      </Routes>
     </Router>
   );
 };
