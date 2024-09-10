@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -14,14 +14,13 @@ const ProductDetails = () => {
     fetchProduct();
   }, [id]);
 
-  if (!product) return <p>Loading...</p>;
+  if (!product) return <div>Loading...</div>;
 
   return (
     <div>
       <h1>{product.name}</h1>
-      <img src={product.imageUrl} alt={product.name} />
-      <p>{product.description}</p>
-      <p>${product.price}</p>
+      <p>Price: ${product.price}</p>
+      <p>Description: {product.description}</p>
     </div>
   );
 };
