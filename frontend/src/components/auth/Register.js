@@ -7,8 +7,13 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data } = await axios.post('/api/register', { email, password });
-    console.log(data); // Handle the response accordingly
+    try {
+      await axios.post('http://localhost:5000/api/auth/register', { email, password });
+      // Redirect or handle registration success
+    } catch (error) {
+      console.error('Registration failed', error);
+      // Handle error (e.g., display error message)
+    }
   };
 
   return (

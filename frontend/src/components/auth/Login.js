@@ -7,8 +7,14 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data } = await axios.post('/api/login', { email, password });
-    console.log(data); // Handle the response accordingly
+    try {
+      const { data } = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      localStorage.setItem('token', data.token); // Store token in local storage
+      // Redirect or handle login success
+    } catch (error) {
+      console.error('Login failed', error);
+      // Handle error (e.g., display error message)
+    }
   };
 
   return (
