@@ -5,9 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>React App</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+
+    <!-- Preload fonts or other important resources -->
+    <link rel="preload" href="/static/media/font.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="A powerful React app" />
+    <meta name="keywords" content="React, Web App, JavaScript, Frontend" />
+    <meta name="author" content="Your Name" />
+
+    <!-- Open Graph Meta Tags for social sharing -->
+    <meta property="og:title" content="React App" />
+    <meta property="og:description" content="A powerful React app." />
+    <meta property="og:image" content="%PUBLIC_URL%/og-image.png" />
+    <meta property="og:url" content="https://www.your-app.com" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="%PUBLIC_URL%/styles.css" />
+    
+    <!-- Add any custom fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+
+    <!-- Add theme-color for mobile browsers -->
+    <meta name="theme-color" content="#ffffff" />
   </head>
   <body>
+    <!-- NoScript Warning -->
     <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <!-- Root Div for React App -->
     <div id="root"></div>
+
+    <!-- External JS Scripts -->
+    <script defer src="%PUBLIC_URL%/js/main.js"></script>
+    <script defer src="%PUBLIC_URL%/js/vendor.js"></script>
+
+    <!-- Analytics (if any) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXX-Y"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'UA-XXXXX-Y');
+    </script>
   </body>
 </html>
