@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const passport = require('passport');
+const { register } = require('../controllers/authController');
 
 // Auth Routes
 router.get('/google', passport.authenticate('google', {
@@ -21,5 +22,9 @@ router.get('/logout', (req, res) => {
 router.get('/current_user', (req, res) => {
   res.send(req.user);
 });
+
+
+// Register route
+router.post('/register', register);
 
 module.exports = router;

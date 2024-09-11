@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './Auth.css'; // Ensure this file exists and is in the correct directory
+import './Auth.css';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -13,11 +13,11 @@ const Register = () => {
     setLoading(true);
     setError('');
     try {
-      await axios.post('/api/auth/register', { email, password });
-      // Redirect to login or show success message
-      alert('Registration successful!');
+      const response = await axios.post('/api/auth/register', { email, password });
+      alert(response.data.message);
     } catch (error) {
       setError('Registration failed. Please try again.');
+      console.error('Registration error:', error.response?.data || error.message);
     } finally {
       setLoading(false);
     }
