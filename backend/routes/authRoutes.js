@@ -1,30 +1,30 @@
-const router = require('express').Router();
+const express = require('express');
 const passport = require('passport');
-const { register } = require('../controllers/authController');
 
-// Auth Routes
+const router = express.Router();
+
+// Initiate Google OAuth authentication
 router.get('/google', passport.authenticate('google', {
-  scope: ['profile', 'email']
+  scope: ['profile', 'email'] // Request access to profile and email
 }));
 
-router.get('/google/callback', passport.authenticate('google'), (req, res) => {
-  // Successful authentication, redirect home.
-  res.redirect('/home'); // Change this to your desired route
+// Google OAuth callback URL
+router.get('/google/callback', passport.authenticate('google', {
+  failureRedirect: '/login',
+  session: true // Enables session support
+}), (req, res) => {
+  res.redirect('/dashboard'); // Redirect to dashboard after successful login
 });
 
 // Logout route
 router.get('/logout', (req, res) => {
-  req.logout();
-  res.redirect('/');
+  req.logout((err) => {
+    if (err) {
+      console.error('Error during logout:', err);
+      return res.status(500).send('Logout failed');
+    }
+    res.redirect('/'); // Redirect to home page after logout
+  });
 });
-
-// Current user route
-router.get('/current_user', (req, res) => {
-  res.send(req.user);
-});
-
-
-// Register route
-router.post('/register', register);
 
 module.exports = router;
