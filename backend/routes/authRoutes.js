@@ -1,41 +1,80 @@
 const express = require('express');
-const passport = require('passport');
-
+const { check, validationResult } = require('express-validator'); // Import express-validator
+const User = require('../models/User');
+const bcrypt = require('bcrypt');
 const router = express.Router();
 
-// Initiate Google OAuth authentication
-router.get('/google', passport.authenticate('google', {
-  scope: ['profile', 'email'] // Request access to profile and email
-}));
-
-// Google OAuth callback URL
-router.get('/google/callback', passport.authenticate('google', {
-  failureRedirect: '/login',
-  session: true // Enables session support
-}), (req, res) => {
-  res.redirect('/dashboard'); // Redirect to dashboard after successful login
-});
-
-// Logout route
-router.get('/logout', (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      console.error('Error during logout:', err);
-      return res.status(500).send('Logout failed');
-    }
-    res.redirect('/'); // Redirect to home page after logout
-  });
-});
-
-// Register Route with Validation Middleware
+// Register route
 router.post(
   '/register',
   [
     check('email', 'Please include a valid email').isEmail(),
-    check('password', 'Password is required').exists(),
+    check('password', 'Password must be 6 or more characters').isLength({ min: 6 })
   ],
-  register
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email, password } = req.body;
+
+    try {
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ message: 'User already exists' });
+      }
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Create new user
+      const newUser = new User({
+        email,
+        password: hashedPassword
+      });
+      await newUser.save();
+
+      res.status(201).json({ message: 'User registered successfully' });
+    } catch (error) {
+      console.error('Registration error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
 );
 
+// Login route
+router.post(
+  '/login',
+  [
+    check('email', 'Please include a valid email').isEmail(),
+    check('password', 'Password is required').exists()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email, password } = req.body;
+
+    try {
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(400).json({ message: 'Invalid credentials' });
+      }
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Invalid credentials' });
+      }
+
+      res.json({ message: 'Login successful' });
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+);
 
 module.exports = router;
