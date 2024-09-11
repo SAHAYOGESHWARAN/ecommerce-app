@@ -6,9 +6,10 @@ const GoogleRegister = () => {
   const handleGoogleRegister = async (response) => {
     try {
       const res = await axios.post('/api/auth/google/register', { tokenId: response.tokenId });
-      alert('Registration successful with Google!');
+      alert(res.data.message); // Adjusted to show server response
     } catch (error) {
       console.error('Google registration error:', error.response?.data || error.message);
+      alert('Google registration failed. Please try again.');
     }
   };
 
