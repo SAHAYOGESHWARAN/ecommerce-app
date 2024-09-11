@@ -7,14 +7,26 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess('');
+    
+    // Basic client-side validation
+    if (!email || !password) {
+      setError('All fields are required.');
+      setLoading(false);
+      return;
+    }
+    
     try {
       const response = await axios.post('/api/auth/register', { email, password });
-      alert(response.data.message);
+      setSuccess('Registration successful! Please log in.');
+      setEmail('');
+      setPassword('');
     } catch (error) {
       setError('Registration failed. Please try again.');
       console.error('Registration error:', error.response?.data || error.message);
@@ -33,6 +45,7 @@ const Register = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          aria-label="Email"
         />
         <input
           type="password"
@@ -40,15 +53,16 @@ const Register = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          aria-label="Password"
         />
         <button type="submit" disabled={loading}>
           {loading ? 'Registering...' : 'Register'}
         </button>
         {error && <p className="error-message">{error}</p>}
+        {success && <p className="success-message">{success}</p>}
       </form>
     </div>
   );
 };
 
 export default Register;
-
