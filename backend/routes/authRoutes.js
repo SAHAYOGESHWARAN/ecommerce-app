@@ -27,4 +27,15 @@ router.get('/logout', (req, res) => {
   });
 });
 
+// Register Route with Validation Middleware
+router.post(
+  '/register',
+  [
+    check('email', 'Please include a valid email').isEmail(),
+    check('password', 'Password is required').exists(),
+  ],
+  register
+);
+
+
 module.exports = router;
