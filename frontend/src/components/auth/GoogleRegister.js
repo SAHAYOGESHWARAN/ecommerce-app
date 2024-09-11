@@ -27,3 +27,8 @@ const GoogleRegister = () => {
 };
 
 export default GoogleRegister;
+
+import GoogleRegister from '../components/Auth/GoogleRegister';
+
+// Usage in a component
+<GoogleRegister />
