@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import GoogleLoginButton from '../GoogleLoginButton'; // Ensure this path is correct
 import axios from 'axios';
-import './Login.css'; // Import CSS file for styling
+import GoogleLogin from 'react-google-login';
+import './Auth.css'; // Import CSS file for styling
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -14,9 +14,8 @@ const Login = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
+      await axios.post('/api/auth/login', { email, password });
       // Handle successful login
-      console.log(response.data); // Or redirect to another page
     } catch (error) {
       setError('Login failed. Please check your credentials.');
     } finally {
@@ -26,18 +25,17 @@ const Login = () => {
 
   const handleGoogleLogin = async (response) => {
     try {
-      const result = await axios.post('/api/auth/google', { tokenId: response.tokenId });
+      await axios.post('/api/auth/google', { tokenId: response.tokenId });
       // Handle successful Google login
-      console.log(result.data); // Or redirect to another page
     } catch (error) {
       setError('Google login failed. Please try again.');
     }
   };
 
   return (
-    <div className="login-container">
+    <div className="auth-container">
       <h2>Login</h2>
-      <form onSubmit={handleSubmit} className="login-form">
+      <form onSubmit={handleSubmit} className="auth-form">
         <input
           type="email"
           placeholder="Email"
@@ -57,7 +55,13 @@ const Login = () => {
         </button>
         {error && <p className="error-message">{error}</p>}
       </form>
-      <GoogleLoginButton onSuccess={handleGoogleLogin} />
+      <GoogleLogin
+        clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID} // Ensure this is in your .env file
+        buttonText="Login with Google"
+        onSuccess={handleGoogleLogin}
+        onFailure={(response) => console.error('Google login failed:', response)}
+        cookiePolicy={'single_host_origin'}
+      />
     </div>
   );
 };
