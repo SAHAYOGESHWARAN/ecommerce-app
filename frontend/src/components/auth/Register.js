@@ -6,7 +6,7 @@ import './Auth.css';
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('user'); // Default role is 'user'
+  const [role, setRole] = useState('user');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
@@ -17,7 +17,6 @@ const Register = () => {
     setError('');
     setSuccess('');
 
-    // Basic client-side validation
     if (!email || !password) {
       setError('All fields are required.');
       setLoading(false);

@@ -1,62 +1,53 @@
+// authController.js
+const { OAuth2Client } = require('google-auth-library');
 const User = require('../models/User');
-const bcrypt = require('bcrypt');
-const { validationResult } = require('express-validator');
-const jwt = require('jsonwebtoken');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-// Register new user
-exports.register = async (req, res) => {
-  // Validate incoming data
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    // Return validation errors
-    return res.status(400).json({ errors: errors.array() });
+exports.registerWithGoogle = async (req, res) => {
+  const { tokenId } = req.body;
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: tokenId,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const email = payload.email;
+
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = new User({ email, password: '', role: 'user' }); // Set default role
+      await user.save();
+    }
+    
+    res.status(200).json({ message: 'Registration successful with Google!' });
+  } catch (error) {
+    res.status(500).json({ message: 'Google registration failed', error: error.message });
   }
-
-  const { email, password } = req.body;
+};
+// authController.js
+exports.register = async (req, res) => {
+  const { email, password, role } = req.body;
 
   try {
     // Check if user already exists
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: 'Email is already registered' });
+      return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Enforce strong password policy
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-    if (!passwordRegex.test(password)) {
-      return res.status(400).json({
-        message:
-          'Password must be at least 8 characters long and include uppercase, lowercase, and numeric characters',
-      });
-    }
-
-    // Hash password with salt
-    const saltRounds = 12;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create new user
     const newUser = new User({
-      email: email.toLowerCase(),
+      email,
       password: hashedPassword,
+      role
     });
     await newUser.save();
 
-    // Generate JWT token
-    const token = jwt.sign(
-      { userId: newUser._id },
-      process.env.JWT_SECRET,
-      { expiresIn: '' }
-    );
-
-    // Send response with token
-    res.status(201).json({
-      message: 'User registered successfully',
-      token,
-      user: {
-        id: newUser._id,
-        email: newUser.email,
-      },
-    });
+    // Send response
+    res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
     console.error('Registration error:', error);
     res.status(500).json({ message: 'Server error' });
