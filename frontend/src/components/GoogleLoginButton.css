@@ -1,0 +1,15 @@
+.google-login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .google-login-button {
+    margin-top: 20px;
+  }
+  
+  .loading-message {
+    color: #007bff;
+    font-size: 16px;
+  }
+  
