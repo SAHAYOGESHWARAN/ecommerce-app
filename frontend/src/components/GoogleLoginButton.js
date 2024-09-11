@@ -12,6 +12,7 @@ const GoogleLoginButton = ({ onSuccess }) => {
       buttonText="Login with Google"
       onSuccess={responseGoogle}
       onError={(error) => console.error(error)}
+      cookiePolicy={'single_host_origin'}
     />
   );
 };
