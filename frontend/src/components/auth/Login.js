@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import GoogleLoginButton from './GoogleLoginButton';
+import GoogleLoginButton from '../GoogleLoginButton'; // Update path based on actual location
 import axios from 'axios';
 
 const Login = () => {
