@@ -1,30 +1,23 @@
 const User = require('../models/User');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 exports.register = async (req, res) => {
-  const { name, email, password } = req.body;
-  try {
-    const user = new User({ name, email, password });
-    await user.save();
-    res.status(201).json({ message: 'User registered' });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+  // Registration logic
 };
 
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: 'User not found' });
+  // Login logic
+};
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+exports.googleLogin = async (req, res) => {
+  const { tokenId } = req.body;
+  const ticket = await client.verifyIdToken({
+    idToken: tokenId,
+    audience: process.env.GOOGLE_CLIENT_ID,
+  });
+  const { email } = ticket.getPayload();
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+  // Handle Google login
 };

@@ -1,47 +1,48 @@
 import React, { useState } from 'react';
+import GoogleLoginButton from './GoogleLoginButton';
 import axios from 'axios';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-      localStorage.setItem('token', response.data.token); // Store token in local storage
-      setMessage('Login successful');
-      // Redirect or handle login success
+      await axios.post('/api/auth/login', { email, password });
+      // Handle successful login
     } catch (error) {
-      setMessage('Login failed. Please check your credentials and try again.');
-      console.error('Login failed', error);
+      console.error(error);
+    }
+  };
+
+  const handleGoogleLogin = async (response) => {
+    try {
+      await axios.post('/api/auth/google', { tokenId: response.tokenId });
+      // Handle successful Google login
+    } catch (error) {
+      console.error(error);
     }
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <h2>Login</h2>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
         <button type="submit">Login</button>
       </form>
-      {message && <p>{message}</p>}
+      <GoogleLoginButton onSuccess={handleGoogleLogin} />
     </div>
   );
 };
