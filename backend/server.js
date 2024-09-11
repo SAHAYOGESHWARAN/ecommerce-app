@@ -15,7 +15,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-  secret: 'your-secret-key',
+  secret: '',
   resave: false,
   saveUninitialized: false
 }));
