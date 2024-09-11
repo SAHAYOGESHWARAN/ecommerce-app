@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { GoogleLogin } from 'react-google-login';
 import './Auth.css';
 
 const Register = () => {
@@ -17,12 +16,6 @@ const Register = () => {
     setError('');
     setSuccess('');
 
-    if (!email || !password) {
-      setError('All fields are required.');
-      setLoading(false);
-      return;
-    }
-
     try {
       const response = await axios.post('/api/auth/register', { email, password, role });
       setSuccess('Registration successful! Please log in.');
@@ -33,16 +26,6 @@ const Register = () => {
       console.error('Registration error:', error.response?.data || error.message);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleGoogleRegister = async (response) => {
-    try {
-      const res = await axios.post('/api/auth/google/register', { tokenId: response.tokenId });
-      setSuccess('Registration successful with Google!');
-    } catch (error) {
-      setError('Google registration failed. Please try again.');
-      console.error('Google registration error:', error.response?.data || error.message);
     }
   };
 
@@ -76,13 +59,6 @@ const Register = () => {
         {error && <p className="error-message">{error}</p>}
         {success && <p className="success-message">{success}</p>}
       </form>
-      <GoogleLogin
-        clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-        buttonText="Register with Google"
-        onSuccess={handleGoogleRegister}
-        onError={(error) => console.error('Google registration error:', error)}
-        cookiePolicy={'single_host_origin'}
-      />
     </div>
   );
 };
