@@ -1,32 +1,23 @@
+// models/User.js
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  googleId: {
-    type: String,
-    required: true,
-    unique: true,
-  },
   email: {
     type: String,
     required: true,
-    unique: true,
+    unique: true
   },
-  firstName: {
+  password: {
+    type: String,
+    required: false, // Not required for Google registration
+  },
+  role: {
     type: String,
     required: true,
-  },
-  lastName: {
-    type: String,
-    required: true,
-  },
-  picture: {
-    type: String, // URL to the user's Google profile picture
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
+    enum: ['user', 'admin']
   }
-});
+}, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
+
 module.exports = User;
