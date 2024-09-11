@@ -4,6 +4,8 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const router = express.Router();
 
+const { registerWithGoogle } = require('../controllers/authController');
+router.post('/google/register', registerWithGoogle);
 // Register route
 router.post(
   '/register',
